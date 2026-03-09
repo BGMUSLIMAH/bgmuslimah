@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — BGMUSLIMAH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --white:#FFFFFF; --off-white:#F8F6F3; --light-grey:#EFEFED;
+  --mid-grey:#9A9A9A; --dark:#0F0F0F; --gold:#C9A96E; --gold-light:#E8D5B0;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Jost',sans-serif;
+  --nav-height:72px; --transition:all 0.3s ease;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);font-weight:300;color:var(--dark);background:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+img{max-width:100%;display:block;}
+a{text-decoration:none;color:inherit;}
+ul{list-style:none;}
+
+.announcement-bar{background:var(--dark);color:var(--white);text-align:center;padding:10px 20px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;}
+.navbar{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--light-grey);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:var(--nav-height);transition:var(--transition);}
+.logo-img{height:80px;width:auto;}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:400;color:var(--dark);position:relative;padding-bottom:2px;transition:var(--transition);}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s ease;}
+.nav-links a:hover::after{width:100%;}
+.nav-icons{display:flex;align-items:center;gap:16px;}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--dark);display:flex;align-items:center;justify-content:center;padding:4px;transition:var(--transition);}
+.icon-btn:hover{color:var(--gold);}
+.cart-count{position:absolute;top:-6px;right:-8px;background:var(--gold);color:var(--white);font-size:9px;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;}
+.cart-btn{position:relative;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--dark);transition:var(--transition);}
+
+.btn{display:inline-block;padding:14px 32px;font-family:var(--font-body);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;border:1.5px solid transparent;cursor:pointer;transition:var(--transition);}
+.btn-dark{background:var(--dark);color:var(--white);border-color:var(--dark);}
+.btn-dark:hover{background:transparent;color:var(--dark);}
+.btn-outline{background:transparent;color:var(--dark);border-color:var(--dark);}
+.btn-outline:hover{background:var(--dark);color:var(--white);}
+.btn-gold{background:var(--gold);color:var(--white);border-color:var(--gold);}
+.btn-gold:hover{background:transparent;color:var(--gold);}
+
+/* Cart */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.35s ease;}
+.cart-overlay.active{opacity:1;pointer-events:all;}
+.cart-sidebar{position:fixed;top:0;right:-420px;width:380px;max-width:100vw;height:100vh;background:var(--white);z-index:201;display:flex;flex-direction:column;transition:right 0.35s ease;box-shadow:-4px 0 30px rgba(0,0,0,0.1);}
+.cart-sidebar.active{right:0;}
+.cart-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--light-grey);}
+.cart-header h3{font-family:var(--font-display);font-size:22px;font-weight:400;}
+.close-btn{background:none;border:none;font-size:16px;cursor:pointer;color:var(--mid-grey);transition:var(--transition);}
+.close-btn:hover{color:var(--dark);}
+.cart-items{flex:1;overflow-y:auto;padding:24px 28px;}
+.cart-empty{font-size:14px;color:var(--mid-grey);text-align:center;padding:40px 0;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--light-grey);font-size:14px;}
+.cart-item-remove{background:none;border:none;color:var(--mid-grey);cursor:pointer;font-size:16px;transition:var(--transition);}
+.cart-item-remove:hover{color:var(--dark);}
+.cart-footer{padding:24px 28px;border-top:1px solid var(--light-grey);}
+.cart-total{display:flex;justify-content:space-between;font-size:15px;font-weight:500;margin-bottom:16px;}
+.cart-preorder-note{background:#FBF6EE;border-left:3px solid var(--gold);padding:12px 14px;font-size:12px;color:#7A6040;line-height:1.6;margin-bottom:12px;}
+.cart-item-tag{display:inline-block;background:var(--gold);color:var(--white);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;margin-top:4px;}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+.modal-overlay.active{opacity:1;pointer-events:all;}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);background:var(--white);z-index:301;width:90%;max-width:480px;padding:44px 40px 36px;opacity:0;pointer-events:none;transition:opacity 0.3s ease,transform 0.3s ease;}
+.modal.active{opacity:1;pointer-events:all;transform:translate(-50%,-50%);}
+.modal-close{position:absolute;top:16px;right:20px;}
+.modal-title{font-family:var(--font-display);font-size:26px;font-weight:400;margin-bottom:10px;}
+.modal-subtitle{font-size:13px;color:var(--mid-grey);line-height:1.6;margin-bottom:24px;}
+.modal-subtitle strong{color:var(--dark);}
+.preorder-form{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+.preorder-form input,.preorder-form select,.preorder-form textarea{border:1.5px solid var(--light-grey);padding:12px 14px;font-family:var(--font-body);font-size:13px;font-weight:300;outline:none;transition:border-color 0.2s ease;background:var(--white);width:100%;}
+.preorder-form select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239A9A9A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.preorder-form textarea{resize:vertical;}
+.preorder-form input:focus,.preorder-form select:focus,.preorder-form textarea:focus{border-color:var(--gold);}
+.preorder-form input::placeholder,.preorder-form textarea::placeholder{color:var(--mid-grey);}
+.modal-disclaimer{font-size:11px;color:var(--mid-grey);text-align:center;line-height:1.6;}
+
+/* Footer */
+.footer{background:var(--dark);color:rgba(255,255,255,0.7);}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding:72px 60px 52px;max-width:1300px;margin:0 auto;}
+.footer-logo{height:44px;width:auto;margin-bottom:16px;filter:invert(1) brightness(2);}
+.footer-tagline{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.5);margin-bottom:24px;}
+.social-links{display:flex;gap:14px;}
+.social-links a{color:rgba(255,255,255,0.5);transition:var(--transition);}
+.social-links a:hover{color:var(--gold);}
+.footer-col h4{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;color:var(--white);margin-bottom:20px;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul li a,.footer-col p{font-size:13px;color:rgba(255,255,255,0.5);transition:var(--transition);}
+.footer-col ul li a:hover{color:var(--gold);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding:20px 60px;text-align:center;font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.06em;}
+
+/* ── PRODUCT PAGE ── */
+.breadcrumb{padding:20px 60px;font-size:11px;letter-spacing:0.08em;color:var(--mid-grey);text-transform:uppercase;border-bottom:1px solid var(--light-grey);}
+.breadcrumb a{color:var(--mid-grey);transition:var(--transition);}
+.breadcrumb a:hover{color:var(--gold);}
+.breadcrumb span{margin:0 8px;}
+
+.product-page{display:grid;grid-template-columns:1fr 1fr;max-width:1300px;margin:0 auto;padding:52px 60px 80px;gap:72px;align-items:start;}
+
+.product-gallery{position:sticky;top:calc(var(--nav-height) + 20px);}
+.gallery-main{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--light-grey);margin-bottom:12px;}
+.gallery-main img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;}
+.gallery-main:hover img{transform:scale(1.03);}
+.gallery-thumbs{display:flex;gap:10px;}
+.gallery-thumb{width:80px;aspect-ratio:3/4;overflow:hidden;background:var(--light-grey);cursor:pointer;border:2px solid transparent;transition:border-color 0.2s ease;flex-shrink:0;}
+.gallery-thumb.active{border-color:var(--gold);}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover;}
+
+.product-details{padding-top:8px;}
+.product-details .product-cat{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.product-details .product-name{font-family:var(--font-display);font-size:clamp(28px,4vw,44px);font-weight:400;line-height:1.1;margin-bottom:16px;letter-spacing:-0.01em;}
+.product-details .product-price{font-size:22px;font-weight:400;margin-bottom:20px;}
+
+.product-divider{border:none;border-top:1px solid var(--light-grey);margin:24px 0;}
+
+.size-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.size-guide-link{color:var(--mid-grey);text-decoration:underline;font-size:11px;cursor:pointer;transition:var(--transition);}
+.size-guide-link:hover{color:var(--dark);}
+.size-options{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+.size-btn{min-width:52px;padding:10px 14px;border:1.5px solid var(--light-grey);background:var(--white);font-family:var(--font-body);font-size:12px;letter-spacing:0.06em;cursor:pointer;transition:var(--transition);text-align:center;}
+.size-btn:hover{border-color:var(--dark);}
+.size-btn.selected{background:var(--dark);color:var(--white);border-color:var(--dark);}
+.size-error{font-size:12px;color:#B05050;margin-bottom:16px;display:none;}
+
+.product-actions{display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+.product-actions .btn{width:100%;text-align:center;padding:16px 32px;font-size:12px;}
+
+.product-description{font-size:14px;line-height:1.8;color:#5A5A5A;margin-bottom:28px;}
+
+.details-accordion{border-top:1px solid var(--light-grey);}
+.accordion-item{border-bottom:1px solid var(--light-grey);}
+.accordion-trigger{width:100%;background:none;border:none;padding:16px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:var(--font-body);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dark);}
+.accordion-icon{font-size:18px;color:var(--mid-grey);transition:transform 0.3s ease;line-height:1;}
+.accordion-item.open .accordion-icon{transform:rotate(45deg);}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
+.accordion-item.open .accordion-body{max-height:300px;}
+.accordion-body p{font-size:13px;line-height:1.8;color:#5A5A5A;padding-bottom:18px;}
+
+.not-found{text-align:center;padding:120px 40px;}
+.not-found h2{font-family:var(--font-display);font-size:36px;font-weight:400;margin-bottom:16px;}
+.not-found p{font-size:14px;color:var(--mid-grey);margin-bottom:32px;}
+
+@media(max-width:900px){
+  .nav-links{display:none;position:fixed;top:var(--nav-height);left:0;right:0;background:var(--white);flex-direction:column;padding:32px 40px;gap:20px;border-bottom:1px solid var(--light-grey);z-index:99;}
+  .nav-links.open{display:flex;}
+  .hamburger{display:flex;}
+  .navbar{padding:0 24px;}
+  .breadcrumb{padding:16px 24px;}
+  .product-page{grid-template-columns:1fr;padding:24px 24px 60px;gap:32px;}
+  .product-gallery{position:static;}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:36px;padding:52px 32px 40px;}
+  .footer-bottom{padding:20px 32px;}
+}
+@media(max-width:500px){
+  .footer-inner{grid-template-columns:1fr;}
+}
+  </style>
+</head>
+<body>
+
+<div class="announcement-bar">
+  <p>Free shipping on orders over 150€ &nbsp;·&nbsp; Handmade in Bulgaria &nbsp;·&nbsp; Natural Fabrics</p>
+</div>
+
+<header class="navbar" id="navbar">
+  <div class="nav-logo">
+    <a href="index.html"><img src="images/logo.png" alt="BGMUSLIMAH Logo" class="logo-img"></a>
+  </div>
+  <nav class="nav-links" id="navLinks">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="shop.html?cat=Closed+Abayas">Closed Abayas</a>
+    <a href="shop.html?cat=Open+Abayas">Open Abayas</a>
+    <a href="shop.html?cat=Khimars">Khimars</a>
+    <a href="shop.html?cat=Prayer+Dresses">Prayer Dresses</a>
+    <a href="shop.html?cat=Sets">Sets</a>
+    <a href="shop.html?cat=Hijabs">Hijabs</a>
+    <a href="shop.html?cat=Coats">Coats</a>
+  </nav>
+  <div class="nav-icons">
+    <button class="icon-btn" aria-label="Search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="icon-btn cart-btn" aria-label="Cart" onclick="openCart()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a><span>·</span>
+  <a href="shop.html">Shop</a><span>·</span>
+  <span id="breadcrumbName">Product</span>
+</div>
+
+<div id="productContent"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <img src="images/logo.png" alt="BGMUSLIMAH" class="footer-logo">
+      <p class="footer-tagline">Modest fashion,<br>handmade with love in Bulgaria.</p>
+      <div class="social-links">
+        <a href="https://instagram.com/bgmuslimah" target="_blank" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="shop.html?cat=Closed+Abayas">Closed Abayas</a></li>
+        <li><a href="shop.html?cat=Open+Abayas">Open Abayas</a></li>
+        <li><a href="shop.html?cat=Khimars">Khimars</a></li>
+        <li><a href="shop.html?cat=Prayer+Dresses">Prayer Dresses</a></li>
+        <li><a href="shop.html?cat=Sets">Sets</a></li>
+        <li><a href="shop.html?cat=Hijabs">Hijabs</a></li>
+        <li><a href="shop.html?cat=Coats">Coats</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>Bulgaria · Ships worldwide</p>
+      <p style="margin-top:12px"><a href="/cdn-cgi/l/email-protection#b6ded3dadad9f6d4d1dbc3c5dadfdbd7de98d5d9db"><span class="__cf_email__" data-cfemail="2048454c4c4f6042474d55534c494d41480e434f4d">[email&#160;protected]</span></a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 BGMUSLIMAH. All rights reserved. · Handmade with love in Bulgaria</p>
+  </div>
+</footer>
+
+<!-- Cart -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button onclick="closeCart()" class="close-btn">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"><p class="cart-empty">Your cart is empty.</p></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">Total: <span id="cartTotal">0€</span></div>
+    <button class="btn btn-dark" style="width:100%">Proceed to Checkout</button>
+  </div>
+</div>
+
+<!-- Pre-order Modal -->
+<div class="modal-overlay" id="preorderOverlay" onclick="closePreorder()"></div>
+<div class="modal" id="preorderModal">
+  <button class="close-btn modal-close" onclick="closePreorder()">✕</button>
+  <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Pre-Order</p>
+  <h3 class="modal-title" id="preorderItemName"></h3>
+  <p class="modal-subtitle">Reserve this piece — <strong>no payment needed.</strong><br>We'll contact you on WhatsApp when it's ready.</p>
+  <form class="preorder-form" onsubmit="submitPreorder(event)">
+    <input type="text" id="preorderName" placeholder="Your full name" required>
+    <input type="tel" id="preorderPhone" placeholder="Phone / WhatsApp number" required>
+    <select id="preorderSize" required><option value="">Select your size</option></select>
+    <textarea id="preorderNotes" placeholder="Any notes? (colour, measurements...)" rows="3"></textarea>
+    <button type="submit" class="btn btn-gold" style="width:100%">Reserve My Piece →</button>
+  </form>
+  <p class="modal-disclaimer">We'll reach out within 1–2 business days. No card details needed.</p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ================================================================
+// PRODUCTS — keep in sync across all pages
+// ================================================================
+var PRODUCTS = [
+  {
+    id: 1,
+    name: "Nour Abaya — Black",
+    category: "Closed Abayas",
+    price: 89,
+    image: "images/product-1.jpg",
+    images: ["images/product-1.jpg"],
+    description: "A timeless closed abaya in premium black fabric. Clean lines, modest and elegant. Crafted by hand in our Bulgarian atelier from natural breathable fabric.",
+    fabric: "100% Natural Crepe. Breathable and flowing.",
+    care: "Hand wash cold. Do not tumble dry. Iron on low heat.",
+    sizes: ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    id: 2,
+    name: "Layla Abaya — Grey",
+    category: "Open Abayas",
+    price: 95,
+    image: "images/product-2.jpg",
+    images: ["images/product-2.jpg"],
+    description: "Flowing open abaya in soft grey. Perfect layering piece for any occasion. Handmade with care in Bulgaria.",
+    fabric: "Natural Linen blend. Light and breathable.",
+    care: "Hand wash cold. Lay flat to dry.",
+    sizes: ["S", "M", "L", "XL"]
+  },
+  {
+    id: 3,
+    name: "Sakina Prayer Set — White",
+    category: "Prayer Dresses",
+    price: 65,
+    image: "images/product-3.jpg",
+    images: ["images/product-3.jpg"],
+    description: "A beautiful white prayer dress set made from breathable natural cotton. Modest, comfortable and elegant for your daily prayers.",
+    fabric: "100% Natural Cotton.",
+    care: "Machine wash at 30°. Do not bleach.",
+    sizes: ["One Size", "S/M", "L/XL"]
+  },
+  {
+    id: 4,
+    name: "Hana Khimar — Black",
+    category: "Khimars",
+    price: 55,
+    image: "images/product-4.jpg",
+    images: ["images/product-4.jpg"],
+    description: "Classic black khimar, flowing and modest. Natural fabric that breathes beautifully. One of our bestselling designs.",
+    fabric: "Natural Chiffon. Lightweight and modest.",
+    care: "Hand wash cold. Do not wring.",
+    sizes: ["One Size"]
+  }
+];
+
+// ================================================================
+// STATE
+// ================================================================
+var selectedSize = null;
+var currentProduct = null;
+var currentPreorderItem = null;
+var cart = [];
+
+// ================================================================
+// PAGE RENDER
+// ================================================================
+function getProductFromURL() {
+  var params = new URLSearchParams(window.location.search);
+  var id = parseInt(params.get('id'));
+  for (var i = 0; i < PRODUCTS.length; i++) {
+    if (PRODUCTS[i].id === id) return PRODUCTS[i];
+  }
+  return null;
+}
+
+function renderProductPage() {
+  var product = getProductFromURL();
+  var container = document.getElementById('productContent');
+
+  if (!product) {
+    container.innerHTML = '<div class="not-found"><h2>Product not found</h2><p>This product may no longer be available.</p><a href="shop.html" class="btn btn-dark">Back to Shop</a></div>';
+    return;
+  }
+
+  currentProduct = product;
+  document.title = product.name + ' — BGMUSLIMAH';
+  document.getElementById('breadcrumbName').textContent = product.name;
+
+  // Build size buttons
+  var sizeBtns = product.sizes.map(function(s) {
+    return '<button class="size-btn" onclick="selectSize(this,\'' + s + '\')">' + s + '</button>';
+  }).join('');
+
+  // Build thumbnails
+  var thumbs = product.images.map(function(img, i) {
+    return '<div class="gallery-thumb' + (i === 0 ? ' active' : '') + '" onclick="switchImage(\'' + img + '\',this)"><img src="' + img + '" alt="' + product.name + '"></div>';
+  }).join('');
+
+  container.innerHTML =
+    '<div class="product-page">' +
+      '<div class="product-gallery">' +
+        '<div class="gallery-main"><img src="' + product.image + '" alt="' + product.name + '" id="mainImage"></div>' +
+        '<div class="gallery-thumbs">' + thumbs + '</div>' +
+      '</div>' +
+      '<div class="product-details">' +
+        '<p class="product-cat">' + product.category + '</p>' +
+        '<h1 class="product-name">' + product.name + '</h1>' +
+        '<p class="product-price">' + product.price + '€</p>' +
+        '<hr class="product-divider">' +
+        '<div class="size-label"><span>Select Size</span><span class="size-guide-link" onclick="alert(\'Size guide coming soon!\')">Size Guide</span></div>' +
+        '<div class="size-options">' + sizeBtns + '</div>' +
+        '<p class="size-error" id="sizeError">Please select a size first.</p>' +
+        '<div class="product-actions">' +
+          '<button class="btn btn-dark" onclick="handleAddToCart()">Add to Cart</button>' +
+          '<button class="btn btn-outline" onclick="handlePreorder()">Pre-Order This Piece</button>' +
+        '</div>' +
+        '<p class="product-description">' + product.description + '</p>' +
+        '<div class="details-accordion">' +
+          '<div class="accordion-item">' +
+            '<button class="accordion-trigger" onclick="toggleAccordion(this)">Fabric & Materials<span class="accordion-icon">+</span></button>' +
+            '<div class="accordion-body"><p>' + product.fabric + '</p></div>' +
+          '</div>' +
+          '<div class="accordion-item">' +
+            '<button class="accordion-trigger" onclick="toggleAccordion(this)">Care Instructions<span class="accordion-icon">+</span></button>' +
+            '<div class="accordion-body"><p>' + product.care + '</p></div>' +
+          '</div>' +
+          '<div class="accordion-item">' +
+            '<button class="accordion-trigger" onclick="toggleAccordion(this)">Shipping & Returns<span class="accordion-icon">+</span></button>' +
+            '<div class="accordion-body"><p>Free shipping on orders over 150€. Standard delivery 5–10 business days. Returns accepted within 14 days for unworn items.</p></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+function switchImage(src, thumb) {
+  document.getElementById('mainImage').src = src;
+  document.querySelectorAll('.gallery-thumb').forEach(function(t) { t.classList.remove('active'); });
+  thumb.classList.add('active');
+}
+
+function selectSize(btn, size) {
+  selectedSize = size;
+  document.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  document.getElementById('sizeError').style.display = 'none';
+}
+
+function toggleAccordion(trigger) {
+  trigger.closest('.accordion-item').classList.toggle('open');
+}
+
+function handleAddToCart() {
+  if (!selectedSize) { document.getElementById('sizeError').style.display = 'block'; return; }
+  addRegularToCart(currentProduct.name, currentProduct.price, selectedSize);
+}
+
+function handlePreorder() {
+  if (!selectedSize) { document.getElementById('sizeError').style.display = 'block'; return; }
+  openPreorder(currentProduct.name, currentProduct.price, selectedSize);
+}
+
+// ================================================================
+// PRE-ORDER MODAL
+// ================================================================
+function openPreorder(name, price, preselectedSize) {
+  currentPreorderItem = { name: name, price: price };
+  document.getElementById('preorderItemName').textContent = name + ' — ' + price + '€';
+  var sel = document.getElementById('preorderSize');
+  sel.innerHTML = '<option value="">Select your size</option>';
+  currentProduct.sizes.forEach(function(s) {
+    var opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    if (s === preselectedSize) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  document.getElementById('preorderModal').classList.add('active');
+  document.getElementById('preorderOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreorder() {
+  document.getElementById('preorderModal').classList.remove('active');
+  document.getElementById('preorderOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  currentPreorderItem = null;
+}
+
+function submitPreorder(event) {
+  event.preventDefault();
+  var name  = document.getElementById('preorderName').value;
+  var phone = document.getElementById('preorderPhone').value;
+  var size  = document.getElementById('preorderSize').value;
+  var notes = document.getElementById('preorderNotes').value;
+  var item  = currentPreorderItem;
+  cart.push({ name: item.name + ' (' + size + ')', price: item.price, quantity: 1, isPreorder: true, customer: { name: name, phone: phone, size: size, notes: notes } });
+  localStorage.setItem('bgmuslimah-cart', JSON.stringify(cart));
+  updateCartUI();
+  event.target.reset();
+  closePreorder();
+  openCart();
+  alert('Thank you, ' + name + '!\n\nYour reservation for ' + item.name + ' in size ' + size + ' is confirmed.\nWe will contact you on WhatsApp at ' + phone + '.\nNo payment needed!');
+}
+
+// ================================================================
+// CART
+// ================================================================
+function openCart() { document.getElementById('cartSidebar').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeCart() { document.getElementById('cartSidebar').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('bgmuslimah-cart', JSON.stringify(cart)); updateCartUI(); }
+
+function addRegularToCart(name, price, size) {
+  var fullName = name + ' (' + size + ')';
+  var existing = null;
+  for (var i = 0; i < cart.length; i++) { if (cart[i].name === fullName && !cart[i].isPreorder) { existing = cart[i]; break; } }
+  if (existing) { existing.quantity += 1; } else { cart.push({ name: fullName, price: price, quantity: 1, isPreorder: false }); }
+  localStorage.setItem('bgmuslimah-cart', JSON.stringify(cart));
+  updateCartUI();
+  openCart();
+}
+
+function updateCartUI() {
+  var cartItemsEl = document.getElementById('cartItems');
+  var cartCountEl = document.getElementById('cartCount');
+  var cartTotalEl = document.getElementById('cartTotal');
+  var cartFooter  = document.getElementById('cartFooter');
+  var totalItems  = cart.reduce(function(s,i){return s+i.quantity;},0);
+  var totalPrice  = cart.filter(function(i){return !i.isPreorder;}).reduce(function(s,i){return s+(i.price*i.quantity);},0);
+  var hasPreorders = cart.some(function(i){return i.isPreorder;});
+  cartCountEl.textContent = totalItems;
+  cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+  if (cart.length === 0) { cartItemsEl.innerHTML = '<p class="cart-empty">Your cart is empty.</p>'; cartFooter.style.display = 'none'; return; }
+  var html = hasPreorders ? '<div class="cart-preorder-note">✦ Your cart includes <strong>Pre-Order reservations</strong>. No payment required for these items.</div>' : '';
+  html += cart.map(function(item,i){
+    return '<div class="cart-item"><div><div style="font-weight:400;margin-bottom:4px">' + item.name + '</div>' +
+      (item.isPreorder ? '<span class="cart-item-tag">Pre-Order · No payment</span>' : '<div style="font-size:12px;color:#9A9A9A">' + item.quantity + ' × ' + item.price + '€</div>') +
+      '</div><button class="cart-item-remove" onclick="removeFromCart(' + i + ')">✕</button></div>';
+  }).join('');
+  cartItemsEl.innerHTML = html;
+  cartFooter.style.display = 'block';
+  cartTotalEl.textContent = (totalPrice === 0 && hasPreorders) ? '0€ (reservations only)' : totalPrice + '€';
+}
+
+function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+window.addEventListener('scroll', function() { document.getElementById('navbar').style.boxShadow = window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none'; });
+renderProductPage();
+</script>
+</body>
+</html>
